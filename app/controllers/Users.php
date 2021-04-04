@@ -82,8 +82,32 @@
 
         public function login() {
             //check if it's a POST request
-            if($_SERVER['REQUEST_METHOD'] === 'POST'){
+            if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 //Process the login
+                $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                
+                $data = [
+                    'email' => trim($_POST['email']),
+                    'password' => trim($_POST['password']),
+                    'email_error' => '',
+                    'password_error' => ''
+                ];
+
+                //Validate email
+                if(empty($data['email'])) {
+                    $data['email_error'] = 'Please enter email!';
+                }
+
+                //Validate email
+                if(empty($data['password'])) {
+                    $data['password_error'] = 'Please enter password!';
+                }
+
+                if(empty($data['email_error']) && empty($data['password_error'])) {
+                    die('SUCCESS');
+                } else {
+                    $this->view('users/login', $data);
+                }
 
             } else {
                 //Load the login form
